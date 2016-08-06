@@ -27,6 +27,7 @@ public class MouseClickPositionPrinter extends Application {
             // We want the text to show up immediately above the position, so set the origin to be
             // VPos.BOTTOM (so the x-position we assign will be the position of the bottom of the
             // text).
+            /**if bottom, the word is above the mouse; if top, below*/
             positionText.setTextOrigin(VPos.BOTTOM);
 
             // Add the positionText to root, so that it will be displayed on the screen.

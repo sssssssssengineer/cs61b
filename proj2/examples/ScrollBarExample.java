@@ -21,9 +21,11 @@ public class ScrollBarExample extends Application {
     public void start(Stage primaryStage) {
         // Create a Node that will be the parent of all things displayed on the screen.
         Group root = new Group();
+        Group scrroot = new Group();
+        scrroot.getChildren().add(root);
         // The Scene represents the window: its height and width will be the height and width
         // of the window displayed.
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT, Color.WHITE);
+        Scene scene = new Scene(scrroot, WINDOW_WIDTH, WINDOW_HEIGHT, Color.WHITE);
 
         int imageWidth = 100;
         int imageStartingHeight = 100;
@@ -43,11 +45,11 @@ public class ScrollBarExample extends Application {
         scrollBar.setPrefHeight(WINDOW_HEIGHT);
 
         // Set the range of the scroll bar.
-        scrollBar.setMin(imageStartingHeight);
+        scrollBar.setMin(300);
         scrollBar.setMax(imageMaxHeight);
 
         // Add the scroll bar to the scene graph, so that it appears on the screen.
-        root.getChildren().add(scrollBar);
+        scrroot.getChildren().add(scrollBar);
 
         double usableScreenWidth = WINDOW_WIDTH - scrollBar.getLayoutBounds().getWidth();
         scrollBar.setLayoutX(usableScreenWidth);
@@ -56,6 +58,7 @@ public class ScrollBarExample extends Application {
         // position describes the top left, so we need to subtract half of the width of the image to
         // determine the position of the left side.
         joshView.setX(usableScreenWidth / 2 - imageWidth / 2);
+        joshView.setY(200);
 
         /** When the scroll bar changes position, change the height of Josh. */
         scrollBar.valueProperty().addListener(new ChangeListener<Number>() {
@@ -70,7 +73,8 @@ public class ScrollBarExample extends Application {
                 //      scroll minimum + (scroll maximum - scroll minimum) / 2
                 // Here, we can directly use the value of the scroll bar to set the height of Josh,
                 // because of how we set the minimum and maximum above.
-                joshView.setFitHeight(newValue.doubleValue());
+                //joshView.setFitHeight(newValue.doubleValue());
+                root.setLayoutY(-(newValue.doubleValue() - 300));
             }
         });
 

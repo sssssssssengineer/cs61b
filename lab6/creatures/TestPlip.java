@@ -8,6 +8,7 @@ import huglife.Action;
 import huglife.Occupant;
 import huglife.Impassible;
 import huglife.Empty;
+import java.util.List;
 
 /** Tests the plip class   
  *  @authr FIXME
@@ -36,10 +37,13 @@ public class TestPlip {
 
     @Test
     public void testReplicate() {
-
+        Plip p = new Plip(1);
+        Plip p1 = new Plip();
+        p1=p.replicate();
+        assertNotSame(p1,p);
     }
 
-    //@Test
+    @Test
     public void testChoose() {
         Plip p = new Plip(1.2);
         HashMap<Direction, Occupant> surrounded = new HashMap<Direction, Occupant>();
@@ -56,6 +60,23 @@ public class TestPlip {
         Action expected = new Action(Action.ActionType.STAY);
 
         assertEquals(expected, actual);
+
+        /**check replicate / move with clorus around.*/
+        Plip p1 = new Plip(1.2);
+        HashMap<Direction, Occupant> surrounded1 = new HashMap<Direction, Occupant>();
+        surrounded1.put(Direction.TOP, new Empty());
+        surrounded1.put(Direction.BOTTOM, new Clorus(1.2));
+        surrounded1.put(Direction.LEFT, new Impassible());
+        surrounded1.put(Direction.RIGHT, new Impassible());
+
+        Action actual1 = p1.chooseAction(surrounded1);
+        List<Direction> empties1 = p1.getNeighborsOfType(surrounded1, "empty");
+        Direction moveDir1 = empties1.get(0);
+
+        Action expected1 = new Action(Action.ActionType.REPLICATE,moveDir1);
+
+
+        assertEquals(expected1, actual1);
     }
 
     public static void main(String[] args) {

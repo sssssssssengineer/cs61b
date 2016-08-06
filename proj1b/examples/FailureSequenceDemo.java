@@ -1,7 +1,13 @@
+import org.junit.Test;
+import org.omg.CORBA.Object;
+
+import static org.junit.Assert.assertEquals;
+
 /** Demonstrates how the FailureSequence class works. */
-public class FailureSequenceDemo {
+public class FailureSequenceDemo<Integer> {
     public static void main(String[] args) {
         FailureSequence fs = new FailureSequence();
+        //StudentArrayDeque<Integer> Sad= new StudentArrayDeque<Integer>();
         DequeOperation dequeOp1 = new DequeOperation("addFirst", 5);
         DequeOperation dequeOp2 = new DequeOperation("addFirst", 10);
         DequeOperation dequeOp3 = new DequeOperation("size");

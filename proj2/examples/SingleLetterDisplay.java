@@ -39,7 +39,7 @@ public class SingleLetterDisplay extends Application {
 
         private static final int STARTING_TEXT_POSITION_X = 250;
         private static final int STARTING_TEXT_POSITION_Y = 250;
-        private static final int STARTING_FONT_SIZE = 20;
+        private static final int STARTING_FONT_SIZE = 12;
 
         /** The Text to display on the screen. */
         private Text displayText = new Text(STARTING_TEXT_POSITION_X, STARTING_TEXT_POSITION_Y, "");
