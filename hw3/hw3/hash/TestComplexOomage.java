@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 import edu.princeton.cs.algs4.StdRandom;
-
+import java.util.Iterator;
 
 public class TestComplexOomage {
 
@@ -28,7 +28,26 @@ public class TestComplexOomage {
          * and ensure that no bucket has fewer than N / 50
          * Oomages and no bucket has more than N / 2.5 Oomages.
          */
-        return false;
+        //return true;
+
+        int[] arr = new int[10];
+        int i = 0;
+        while (i!=10){arr[i]=0;i++;}
+        int N =0;
+        for (Iterator<ComplexOomage> SO = oomages.iterator(); SO.hasNext(); ) {
+            ComplexOomage f = SO.next();
+            int y = (f.hashCode() & 0x7FFFFFFF) % 10;
+            arr[y]++;
+            N++;
+        }
+        i = 0;
+        while (i != 10){
+            if (arr[i]<N/50 || arr[i]>N/2.5){
+                return false;
+            }
+            i++;
+        }
+        return true;
     }
 
 
