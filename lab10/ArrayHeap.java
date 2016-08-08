@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+import java.util.Iterator;
 /**
  * A Generic heap class. Unlike Java's priority queue, this heap doesn't just
  * store Comparable objects. Instead, it can store any type of object
@@ -7,12 +7,21 @@ import java.util.ArrayList;
  */
 public class ArrayHeap<T> {
 	private ArrayList<Node> contents = new ArrayList<Node>();
-
+	private int maxindex = 0;
 	/**
 	 * Inserts an item with the given priority value. This is enqueue, or offer.
 	 */
 	public void insert(T item, double priority) {
-
+		maxindex+=1;
+		Node temp = new Node(item,priority);
+		setNode(maxindex,temp);
+		int i = maxindex;
+		while (i!=1){
+			if (min(i,i/2)!=i/2){
+				bubbleUp(i);
+			}
+			i/=2;
+		}
 	}
 
 	/**
@@ -21,7 +30,7 @@ public class ArrayHeap<T> {
 	 */
 	public Node peek() {
 		// TODO Complete this method!
-		return null;
+		return contents.get(1);
 	}
 
 	/**
@@ -30,7 +39,30 @@ public class ArrayHeap<T> {
 	 */
 	public Node removeMin() {
 		// TODO Complete this method!
-		return null;
+		Node temp = contents.get(1);
+		swap(1,maxindex);
+		Node empnode = new Node(null,0);
+		setNode(maxindex,empnode);
+		maxindex -=1;
+		isvalid(1);
+		return temp;
+	}
+	private Node isvalid(int i){
+		if (2*i > maxindex){
+			if (min(i,2*i)==i){return null;}else {bubbleUp(2*i);return null;}
+		} else if(2*i+1 > maxindex) {
+			if (min(i, 2 * i) != i) {
+				bubbleUp(2 * i);
+			}
+			if (min(i, 2 * i + 1) == i) {
+				return null;
+			} else {
+				bubbleUp(2 * i);
+				return null;
+			}
+		}
+		if (min(i,2*i)==i && min(i,2*i+1)==i){return isvalid(i+1);}
+		else{bubbleUp(2*i); return isvalid(i+1);}
 	}
 
 	/**
@@ -40,6 +72,14 @@ public class ArrayHeap<T> {
 	 */
 	public void changePriority(T item, double priority) {
 		// TODO Complete this method!
+		Node temp = new Node(item,priority);
+		int i =1;
+		while (i != maxindex +1){
+			Node nodeati = getNode(i);
+			if (nodeati.equals(temp)){setNode(i,temp);}/**this might be wrong*/
+			i++;
+
+		}
 	}
 
 	/**
@@ -103,7 +143,7 @@ public class ArrayHeap<T> {
 	 */
 	private int getLeftOf(int i) {
 		// TODO Complete this method!
-		return 0;
+		return 2*i;
 	}
 
 	/**
@@ -111,7 +151,7 @@ public class ArrayHeap<T> {
 	 */
 	private int getRightOf(int i) {
 		// TODO Complete this method!
-		return 0;
+		return 2*i+1;
 	}
 
 	/**
@@ -119,7 +159,7 @@ public class ArrayHeap<T> {
 	 */
 	private int getParentOf(int i) {
 		// TODO Complete this method!
-		return 0;
+		return i/2;
 	}
 
 	/**
@@ -127,6 +167,7 @@ public class ArrayHeap<T> {
 	 */
 	private void setLeft(int index, Node n) {
 		// TODO Complete this method!
+		setNode(2*index,n);
 	}
 
 	/**
@@ -134,6 +175,7 @@ public class ArrayHeap<T> {
 	 */
 	private void setRight(int inde, Node n) {
 		// TODO Complete this method!
+		setNode(2*inde+1,n);
 	}
 
 	/**
@@ -141,13 +183,15 @@ public class ArrayHeap<T> {
 	 */
 	private void bubbleUp(int index) {
 		// TODO Complete this method!
+		swap(index,index/2);
 	}
 
 	/**
 	 * Bubbles down the node currently at the given index.
 	 */
-	private void bubbleDown(int inex) {
+	private void bubbleDown(int index) {
 		// TODO Complete this method!
+		swap(index,index*2);
 	}
 
 	/**
