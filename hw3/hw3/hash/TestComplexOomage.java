@@ -2,13 +2,11 @@ package hw3.hash;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.*;
+
 import edu.princeton.cs.algs4.StdRandom;
-import java.util.Iterator;
 
 public class TestComplexOomage {
 
@@ -67,8 +65,17 @@ public class TestComplexOomage {
     public void testWithDeadlyParams() {
         /* TODO: Create a Set that shows the flaw in the hashCode function.
          */
-        HashSet<ComplexOomage> oomages = new HashSet<ComplexOomage>();
+        List<Integer> newlist =new LinkedList<>();
+        int x =1;
+        int i =0;
+        while (i != 10) {
+            newlist.add(x);
+            i++;
+        }
 
+        HashSet<ComplexOomage> oomages = new HashSet<ComplexOomage>((List) newlist);
+
+        //oomages.hashCode();
         assertTrue(haveNiceHashCodeSpread(oomages));
     }
 
