@@ -490,21 +490,21 @@ public class LinkedListDeque<Item> {
     }
 
     /**wrap till the end*/
-    //public static int countLine = 1;
+    public static int countLine = 1;
     private listandlinetype start;
-    public String WrapTillEnd(int countl,Item newline1,Item newline2){
+    public void WrapTillEnd(Item newline1,Item newline2){
 
-        start = Wraptillenddistance(LineFirstsTotal.get(countl - 1));
-        if (start!=null){
+        start = Wraptillenddistance(LineFirstsTotal.get(0));
+        while (start!=null){
             if (start.linetype=="natural") {
                 WrapAtPosnewline(start.list, newline1, newline2);
-                countl += 1;
+                countLine += 1;
             }else{
                 WrapAtPos(start.list, newline1, newline2);
-                countl += 1;
+                countLine += 1;
             }
-        }else return null;
-        return WrapTillEnd(countl,newline1, newline2);
+            start = Wraptillenddistance(LineFirstsTotal.get(countLine-1));
+        }
     }
     public class listandlinetype{
         private List list;
