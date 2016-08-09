@@ -31,6 +31,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 import javafx.scene.input.MouseEvent;
+import edu.princeton.cs.algs4.Stopwatch;
 
 
 public class Editor extends Application {
@@ -50,10 +51,17 @@ public class Editor extends Application {
     public static void readinput(String input){
         /**read input file*/
         inputfilename=input;
+
+        /**output the runtime
+         * this line takes the majority of the runtime*/
+        //Stopwatch sw2 = new Stopwatch();
         read=ReadFile.ReadFile(input);
+        //System.out.println("@2@"+sw2.elapsedTime()+"@2@");
+
         characterTyped=""+read;
         wholetext = readAsLinkedList.read(input);
         wholetext.CurrentPosToLast();
+
         }
 
     private class RectangleBlinkEventHandler implements EventHandler<ActionEvent> {
@@ -360,7 +368,9 @@ public class Editor extends Application {
     }
 
     public static void main(String[] args) {
+        Stopwatch sw = new Stopwatch();
         Editor.readinput(args[0]);
+        System.out.println("spend "+sw.elapsedTime()+" second to open the file");
         launch(args);
         }
 
