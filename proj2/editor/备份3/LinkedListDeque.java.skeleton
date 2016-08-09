@@ -3,7 +3,6 @@
  */
 package editor;
 
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.lang.reflect.Array;
 import groovy.swing.factory.LineBorderFactory;
@@ -38,7 +37,6 @@ public class LinkedListDeque<Item> {
         P = sentinel;//delete
         LineFirsts.addFirst(sentinel);
         LineFirstsTotal.addFirst(sentinel);
-        temptext.setFont(Font.font(fontName, fontSize));
     }
 
     //}
@@ -489,31 +487,6 @@ public class LinkedListDeque<Item> {
         }
     }
 
-    /**wrap till the end*/
-    //public static int countLine = 1;
-    private listandlinetype start;
-    public String WrapTillEnd(int countl,Item newline1,Item newline2){
-
-        start = Wraptillenddistance(LineFirstsTotal.get(countl - 1));
-        if (start!=null){
-            if (start.linetype=="natural") {
-                WrapAtPosnewline(start.list, newline1, newline2);
-                countl += 1;
-            }else{
-                WrapAtPos(start.list, newline1, newline2);
-                countl += 1;
-            }
-        }else return null;
-        return WrapTillEnd(countl,newline1, newline2);
-    }
-    public class listandlinetype{
-        private List list;
-        private String linetype;
-        public listandlinetype(List lis,String lin){
-            list = lis;
-            linetype = lin;
-        }
-    }
     /**wrap*/
     public String Wrap(Item newline1,Item newline2){
         /**this is left to revise*/
@@ -534,18 +507,13 @@ public class LinkedListDeque<Item> {
         while (Math.round(wordlength)<450){
             if (start.next == sentinel){return null;}
             char readchar = CharacterTochar((Character) start.next.items);
-            /**is this valid,
-             * when reads a CR, it should return the reference of it
-             * and maybe add a NewLineAndArrayitem*/
-            if (readchar == 10){
-                return null;
-            }
+            if (readchar == 13){return null;}
             if (readchar ==32){space = start.next;}
             wordlength+=textbuilder((Character) start.items).getLayoutBounds().getWidth();
             i+=1;
             start=start.next;
         }
-        //if (wordlength<450){return null;}
+        if (wordlength<450){return null;}
         if (space == null) {
             return start;
         }
@@ -559,38 +527,6 @@ public class LinkedListDeque<Item> {
 
         return temp;
     }
-    public listandlinetype Wraptillenddistance(List start){
-        int i = 0;
-        double wordlength = 0;
-        List space = null;
-        while (Math.round(wordlength)<450){
-            if (start.next == sentinel){return null;}
-            char readchar = CharacterTochar((Character) start.next.items);
-            /**is this valid,
-             * when reads a CR, it should return the reference of it*/
-            if (readchar == 10){
-                //System.out.println("wordlength:"+wordlength);
-                listandlinetype temp = new listandlinetype(start.next, "natural");
-                return temp;
-            }
-            if (readchar ==32){space = start.next;}
-            wordlength+=textbuilder((Character) start.items).getLayoutBounds().getWidth();
-            i+=1;
-            start=start.next;
-            //System.out.println("linefirsttotal:"+LineFirstsTotal.numbers);
-        }
-        //if (wordlength<450){return null;}
-        /**in order to wrap before space*/
-        if (space == null) {
-            listandlinetype temp = new listandlinetype(start, "artificial");
-            return temp;
-        }
-        /**wordlength at 450 and now wrap*/
-
-        listandlinetype temp1 = new listandlinetype(space, "artificial");
-        //System.out.println("wordlength:"+wordlength);
-        return temp1;
-    }
     /**do the wrap*/
     public void WrapAtPos(List Pos, Item newline1,Item newline2){
         /** add newline after the nearest space on the left
@@ -598,24 +534,15 @@ public class LinkedListDeque<Item> {
         this.addAtPos(Pos,newline1);
         this.addAtPos(Pos,newline2);
         /**this should be NewArtificialLine*/
+        //System.out.print(Pos.items+"here");
         this.NewArtificialLine(Pos.next.next);
     }
-    public void WrapAtPosnewline(List Pos, Item newline1,Item newline2){
-        /** add newline after the nearest space on the left
-         * or just the rightest of the line*/
-        /**this should be NewArtificialLine*/
-        this.NewLineAndArrayitem(Pos);
-    }
     /**convert Character to Text*/
-    private int fontSize = 12;
-    private String fontName = "Verdana";
-    private Text temptext = new Text();
-
-    public Text textbuilder(Character C){
-
+    private Text textbuilder(Character C){
         StringBuilder stringbuilder = new StringBuilder(1);
         stringbuilder.append(C);
         String output = stringbuilder.toString();
+        Text temptext = new Text();
         temptext.setText(output);
         return temptext;
     }
@@ -802,26 +729,5 @@ public class LinkedListDeque<Item> {
         CurrentPrev.next = CurrentPos;
         CurrentNext.prev = CurrentPos;
         CurrentPos.items = itm;
-    }
-    public String toString(){
-        /**List runner = sentinel.next;
-        StringBuilder stringbuilder = new StringBuilder(size);
-
-        while (runner.items!=null){
-            stringbuilder.append(runner.items);
-        }
-        String output = stringbuilder.toString();
-        return output;*/
-        List position;
-        position=sentinel.next;
-
-        /**use stirngbuilder to convert Character to string.*/
-        StringBuilder stringbuilder = new StringBuilder(1);
-        while (position.items != null){
-            stringbuilder.append(position.items);
-            position = position.next;
-        }
-        String output = stringbuilder.toString();
-        return output;
     }
 }

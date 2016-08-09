@@ -55,13 +55,11 @@ public class Editor extends Application {
         /**output the runtime
          * this line takes the majority of the runtime*/
         //Stopwatch sw2 = new Stopwatch();
-        //read=ReadFile.ReadFile(input);
+        read=ReadFile.ReadFile(input);
         //System.out.println("@2@"+sw2.elapsedTime()+"@2@");
 
-
-        wholetext = readAsLinkedList.read(input);
-        read = wholetext.toString();
         characterTyped=""+read;
+        wholetext = readAsLinkedList.read(input);
         wholetext.CurrentPosToLast();
 
         }

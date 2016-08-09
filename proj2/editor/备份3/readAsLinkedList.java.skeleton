@@ -9,8 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import editor.LinkedListDeque;
-import javafx.scene.text.Text;
 
 import javafx.scene.input.KeyCode;
 
@@ -26,8 +24,6 @@ public class readAsLinkedList {
             BufferedReader bufferedReader = new BufferedReader(reader);
 
             int intRead = -1;
-
-
             // Keep reading from the file input read() returns -1, which means the end of the file
             // was reached.
             while ((intRead = bufferedReader.read()) != -1) {
@@ -43,17 +39,12 @@ public class readAsLinkedList {
                     readLinkedList.addLast(newline.charAt(0));
                 }else {*/
                     readLinkedList.addLast(charRead);
-
-                /***/
-/**
                 if (charRead == 10){
                     readLinkedList.NewLineAndArrayitem(readLinkedList.getLast());
-                }*/
+                }
+                //}
             }
-            char a = 13;
-            char b = 10;
-            System.out.println("linefirsttotal@:"+readLinkedList.LineFirstsTotal.numbers);
-            readLinkedList.WrapTillEnd(1,b,a);
+
             bufferedReader.close();
         } catch (FileNotFoundException fileNotFoundException) {
             System.out.println("File not found! Exception was: " + fileNotFoundException);
