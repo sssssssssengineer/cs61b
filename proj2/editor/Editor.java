@@ -41,7 +41,8 @@ public class Editor extends Application {
     private static String characterTyped="";
     private static String inputfilename;
     private final Rectangle cursor;
-    private static LinkedListDeque<Character> wholetext= new LinkedListDeque<>();
+    public static LinkedListDeque<Character> wholetext= new LinkedListDeque<>();
+    private String[] parts= new String[2];
 
     public Editor(){
         // Create a rectangle to surround the text that gets displayed.  Initialize it with a size
@@ -193,6 +194,7 @@ public class Editor extends Application {
             cursor.setX(wholetext.CurrentX+5);
             cursor.setY(wholetext.CurrentY+0);
 
+
         }
     }
 
@@ -247,12 +249,26 @@ public class Editor extends Application {
 
         @Override
         public void handle(KeyEvent keyEvent) {
+            /**split the String in the currentpos to edit*/
+            Stopwatch sw = new Stopwatch();
+
+
+            //parts[0] =characterTyped.substring(0,wholetext.SplitPosNum());
+            //parts[1] =characterTyped.substring(wholetext.SplitPosNum());
+            System.out.println("1111 "+sw.elapsedTime());
+            Stopwatch sw2 = new Stopwatch();
                 if (keyEvent.getEventType() == KeyEvent.KEY_TYPED) {
                     // Use the KEY_TYPED event rather than KEY_PRESSED for letter keys, because with
                     // the KEY_TYPED event, javafx handles the "Shift" key and associated
                     // capitalization.
-
                     wholetext.addAfterCurrentPos(keyEvent.getCharacter().charAt(0));
+/**
+                    char s = keyEvent.getCharacter().charAt(0);
+                    String temp = new StringBuilder().append(s).toString();
+
+                    parts[0]=parts[0].concat(temp);
+                    //System.out.println("%%%%%%%%%%%%%%%%%%");
+                    //System.out.println(parts[0]);*/
                     //characterTyped = wholetext.reCulDisplayText();
                     char a = 13;
                     char b = 10;
@@ -268,7 +284,7 @@ public class Editor extends Application {
                         //wholetext.CurrentPosToLast();
                         characterTyped = wholetext.reCulDisplayText();
                         wholetext.callstoredInfo(wholetext.returnListCurPos(),wholetext.getCurrentPos(),"enter");
-                        System.out.print("enter");
+                        //System.out.print("enter");
                     } else if (wholetext.Wrap(b, a) != null) {
                         /**word wrap*/
                         characterTyped = wholetext.reCulDisplayText();
@@ -283,16 +299,19 @@ public class Editor extends Application {
                             Character tempc =wholetext.removeAtCurrentPos();
                             wholetext.removeNull();
                             wholetext.callstoredInfo(wholetext.returnListCurPos(),tempc,"remove");
-                            System.out.print("*"+tempc+"*");
-                            System.out.print(wholetext.returnListCurPos().items);
+                            //System.out.print("*"+tempc+"*");
+                            //System.out.print(wholetext.returnListCurPos().items);
                         }
                         /**store information for redo and undo*/
                         /**a little bug here, turns out when pressed ctrl+z, key_typed is also activated*/
                         else if (!keyEvent.isShortcutDown()) {
                             wholetext.callstoredInfo(wholetext.returnListCurPos(), wholetext.getCurrentPos(), "add");
-                            System.out.print("*here*");
+
+                            //System.out.print("*here*");
                         }
+                        /**take up majority of editing time*/
                         characterTyped = wholetext.reCulDisplayText();
+                        //characterTyped=parts[0].concat(parts[1]);
 
 
                     }
@@ -303,9 +322,16 @@ public class Editor extends Application {
                         //scrollBar.adjustValue(scrollmoved - wholetext.CurrentY);
                     }*/
                     /**display*/
+                    //characterTyped=parts[0].concat(parts[1]);
+                    //displayText.setText(parts[0]);
+                    //displayText.setText(parts[1]);
                     displayText.setText(characterTyped);
                     keyEvent.consume();
+                    System.out.println("3333 "+sw2.elapsedTime());
+                    Stopwatch sw1 = new Stopwatch();
                     centerText();
+                    System.out.println("2222 "+sw1.elapsedTime());
+                    //System.out.println(characterTyped);
 
                 } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                     // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
@@ -335,9 +361,18 @@ public class Editor extends Application {
                             wholetext.undo();
                         } else if (code == KeyCode.Y){
                             wholetext.redo();
+                        }else if (code == KeyCode.Q){
+                            /**hello world*/
+                            //String[] parts = {characterTyped.substring(0,5),characterTyped.substring(5)};
+                            //System.out.println("are we good?");
+                            //System.out.println(parts[0]); //first part
+                            //System.out.println("are we good?");
+                            //System.out.println(parts[1]); //second part
+                            System.out.println("Current "+wholetext.CurrentPos.next.items);
                         }
                     }
                 }
+
             }
 
         private void centerText() {
@@ -353,8 +388,9 @@ public class Editor extends Application {
 
             // For rectangles, the position is the upper left hand corner.
             /**recalculate CurrentX and CurrentY*/
+            Stopwatch sw3 = new Stopwatch();
             wholetext.CurrentpRecalibrate();
-
+            System.out.println("tofront "+sw3.elapsedTime());
             //double tempd = wholetext.getLastText().getLayoutBounds().getWidth();
             //int lastTextWidth =(int) Math.round(tempd);
             cursor.setX(wholetext.CurrentX+textCenterX);
@@ -364,7 +400,9 @@ public class Editor extends Application {
             displayText.setX(textLeft);
             displayText.setY(textTop);
             // Make sure the text appears in front of any other objects you might add.
+
             displayText.toFront();
+
 
         }
     }

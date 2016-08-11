@@ -3,6 +3,7 @@
  */
 package editor;
 
+import edu.princeton.cs.algs4.Stopwatch;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.lang.reflect.Array;
@@ -14,13 +15,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
+import editor.Editor;
 
 public class LinkedListDeque<Item> {
     private int size = 0;
     public List sentinel;
     private List P;//pointer   delete
-    private List CurrentPos;
+    public List CurrentPos;
     public ArrayDeque<List> LineFirsts = new ArrayDeque<>();
     public ArrayDeque<List> LineFirstsArtificial = new ArrayDeque<>();
     public ArrayDeque<List> LineFirstsTotal = new ArrayDeque<>();
@@ -28,6 +32,8 @@ public class LinkedListDeque<Item> {
     public int CurrentY;
     private int CurrentLine;
     private int line=0;
+    public Map<Integer,Integer> countxMap = new HashMap<Integer, Integer>();
+    public double wordHeight;
 
     //: Creates an empty linked list deque.
     //this runs when the LinkedListDeque class is instantiated.
@@ -38,7 +44,10 @@ public class LinkedListDeque<Item> {
         P = sentinel;//delete
         LineFirsts.addFirst(sentinel);
         LineFirstsTotal.addFirst(sentinel);
+        countxMap.put(0,0);
         temptext.setFont(Font.font(fontName, fontSize));
+        char temp = 97;
+        wordHeight=textbuilder((Character) temp).getLayoutBounds().getHeight();
     }
 
     //}
@@ -202,6 +211,7 @@ public class LinkedListDeque<Item> {
         public int nextLast;
         public Item[] items;
 
+
         //: Creates an empty linked list deque.
         //this runs when the LinkedListDeque class is instantiated.
         public ArrayDeque() {
@@ -245,6 +255,8 @@ public class LinkedListDeque<Item> {
                 nextFirst += size;
             }
             numbers += 1;//final numbers
+            /**hello world*/
+            //countxMap.put(itm,Editor.wholetext.size);
         }
 
 
@@ -259,7 +271,9 @@ public class LinkedListDeque<Item> {
                 nextLast -= size;
             }
             numbers += 1;
+
         }
+
 
 
         //: Returns true if deque is empty, false otherwise.
@@ -401,14 +415,28 @@ public class LinkedListDeque<Item> {
 
     /**when there is a newline, create a new List that items point at \n*/
     public void NewLineAndArrayitem(List newline){
+        /**bug here, not always at last.*/
         LineFirsts.addLast(newline);
         LineFirstsTotal.addLast(newline);
+        /**hello world*/
+        NewLinetocountxMap(line);
         line += 1;
     }
     public void NewArtificialLine(List newline){
         LineFirstsArtificial.addLast(newline);
         LineFirstsTotal.addLast(newline);
+        NewLinetocountxMap(line);
         line += 1;
+
+    }
+    public void NewLinetocountxMap(int line){
+        NewLinetocountxMap(line,LineFirstsTotal.get(line),LineFirstsTotal.get(line+1));
+    }
+    private void NewLinetocountxMap(int line,List start,List end){
+        int numberbefore=countxMap.get(line);
+        int numberthis=countThisLineNumber(start,end);
+        /**next line and the missing /n*/
+        countxMap.put(line+1,numberbefore+numberthis+1);
     }
     /**item number of List LineFirsts*/
     public int LineFirstsNumber(){
@@ -612,8 +640,7 @@ public class LinkedListDeque<Item> {
     private Text temptext = new Text();
 
     public Text textbuilder(Character C){
-
-        StringBuilder stringbuilder = new StringBuilder(1);
+        StringBuilder stringbuilder = new StringBuilder(10);
         stringbuilder.append(C);
         String output = stringbuilder.toString();
         temptext.setText(output);
@@ -697,38 +724,81 @@ public class LinkedListDeque<Item> {
             start=start.next;
         }
     }
-    private List countDistance(List start,int distance){
+    public List countDistance(List start,int distance){
         /**count the distance and return the List at the specified position*/
         double wordlength = 0;
+        start=start.next;
         while (Math.round(wordlength) <= distance){
             wordlength+=textbuilder((Character) start.items).getLayoutBounds().getWidth();
             start=start.next;
         }
         return start.prev;
     }
+    public int theNumberAtLineFirst(int line){
+        return countxMap.get(line);
+    }
+
+    public int SplitPosNum(){
+        CurrentpRecalibrate();
+        return SplitPosNum(LineFirstsTotal.get(line),CurrentX);
+    }
+    public int SplitPosNum(List start,int distance){
+        /**count the distance and return the List at the specified position*/
+        double wordlength = 0;
+        int i = 0;
+        start=start.next;
+        while (Math.round(wordlength) < distance){
+            wordlength+=textbuilder((Character) start.items).getLayoutBounds().getWidth();
+            start=start.next;
+            i++;
+        }
+        return i+theNumberAtLineFirst(line);
+    }
     private int countListDistance(List start,List end){
         /**count the distance and return the List at the specified position*/
         double wordlength = 0;
         if (start == end){return 0;}
         start = start.next;
+        Stopwatch sw4 = new Stopwatch();
+        int i =0;
+
+        while (start!=end) {
+            wordlength+=textbuilder((Character) start.items).getLayoutBounds().getWidth();
+            start=start.next;
+            i++;
+        }
+        System.out.println("line "+line);
+        System.out.println("oopss "+i);
+        System.out.println("ohchy "+sw4.elapsedTime());
+        return (int) Math.round(wordlength+textbuilder((Character) start.items).getLayoutBounds().getWidth());
+
+    }
+    private int countThisLineNumber(List start,List end){
+        /**count the distance and return the List at the specified position*/
+        int i = 0;
+        /**avoid mistake at the sentinel, all start should*/
+        start=start.next;
         while (true){
             /**.next might be wrong*/
             if (start == end){
-                return (int) Math.round(wordlength+textbuilder((Character) start.items).getLayoutBounds().getWidth());
+                return i;
             }
-            wordlength+=textbuilder((Character) start.items).getLayoutBounds().getWidth();
             start=start.next;
+            i++;
         }
     }
     public void CurrentpRecalibrate(){
         //System.out.print(CurrentPos.items);
         /**the length of text is determined by the total line(not the length of a single word)*/
-        Character tempc = 98;
-        Text tempt = textbuilder(tempc);
+        //Character tempc = 98;
+        //Text tempt = textbuilder(tempc);
         //System.out.print(tempt.getLayoutBounds().getHeight());
-        CurrentY = (int) Math.round(line *14.65);
+        Stopwatch sw3 = new Stopwatch();
+        CurrentY = (int) Math.round(line *wordHeight);
+        System.out.println("aha "+sw3.elapsedTime());
+        Stopwatch sw4 = new Stopwatch();
         CurrentX = countListDistance(LineFirstsTotal.get(line),CurrentPos);
-
+        System.out.println("bitching "+sw4.elapsedTime());
         //System.out.print(" X="+CurrentX+" ");
         /**
         double a = getLastText().getLayoutBounds().getWidth());
@@ -738,7 +808,7 @@ public class LinkedListDeque<Item> {
         System.out.print(" s="+sum+"\n");*/
     }
     public void MouseClickPos(double x, double y){
-        line =(int) Math.round(y / 14.65);
+        line =(int) Math.round(y / wordHeight);
         CurrentPos = countDistance(LineFirstsTotal.get(line),(int)Math.round(x));
     }
     private class storedInfo{

@@ -52,7 +52,7 @@ public class readAsLinkedList {
             }
             char a = 13;
             char b = 10;
-            System.out.println("linefirsttotal@:"+readLinkedList.LineFirstsTotal.numbers);
+            //System.out.println("linefirsttotal@:"+readLinkedList.LineFirstsTotal.numbers);
             readLinkedList.WrapTillEnd(b,a);
             bufferedReader.close();
         } catch (FileNotFoundException fileNotFoundException) {
